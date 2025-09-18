@@ -1,0 +1,98 @@
+[
+  {
+    "op": "add",
+    "path": "/layers/0/activity",
+    "value": {
+      "id": "ACT-ST1-INCIP-INIT",
+      "title": "Inception & Project Initiation",
+      "purpose": "Kick off the project by clarifying the problem, scope, stakeholders, and feasibility.",
+      "bullets": [
+        {
+          "label": "Problem Definition",
+          "text": "Clearly articulate the business problem or opportunity."
+        },
+        {
+          "label": "Stakeholder Identification & Mapping",
+          "text": "Identify all stakeholders (users, sponsors, regulators, etc.) and their influence/interest levels."
+        },
+        {
+          "label": "Project Charter Creation",
+          "text": "Define project objectives, scope, constraints, and success criteria."
+        },
+        {
+          "label": "Feasibility Assessment",
+          "text": "Evaluate technical, economic, operational, and schedule feasibility."
+        },
+        {
+          "label": "Risk Identification",
+          "text": "Identify potential project risks and mitigation strategies."
+        },
+        {
+          "label": "Business Case Development",
+          "text": "Justify the project from a business perspective."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Project Charter",
+          "type": "doc",
+          "required": true
+        },
+        {
+          "name": "Stakeholder Map",
+          "type": "diagram",
+          "required": true
+        },
+        {
+          "name": "Feasibility Summary",
+          "type": "doc",
+          "required": true
+        },
+        {
+          "name": "Initial Risk Register",
+          "type": "sheet",
+          "required": true
+        },
+        {
+          "name": "Business Case",
+          "type": "doc",
+          "required": false
+        }
+      ],
+      "acceptance_criteria": [
+        "Problem statement approved by sponsor",
+        "Stakeholder list & map reviewed",
+        "Charter signed off with scope & success metrics",
+        "Feasibility risks documented with next steps",
+        "Initial risk register created and owners assigned"
+      ],
+      "metrics": {
+        "lead_time_days": {
+          "target_max": 7
+        },
+        "stakeholder_coverage_pct": {
+          "target_min": 90
+        },
+        "open_risks_with_owners_pct": {
+          "target_min": 100
+        }
+      },
+      "raci": {
+        "Responsible": [
+          "Project Manager"
+        ],
+        "Accountable": [
+          "Sponsor"
+        ],
+        "Consulted": [
+          "Architect",
+          "Security",
+          "Finance"
+        ],
+        "Informed": [
+          "Core Team"
+        ]
+      }
+    }
+  }
+]

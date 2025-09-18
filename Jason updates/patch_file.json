@@ -1,0 +1,679 @@
+[
+  {
+    "op": "add",
+    "path": "/layers/0/evidence_management",
+    "value": {
+      "evidence_packs": {
+        "enabled": true,
+        "available_packs": ["EP_REQUIREMENTS", "EP_DOMAIN", "EP_TECHNICAL"],
+        "active_packs": ["EP_REQUIREMENTS", "EP_DOMAIN"],
+        "routing": {
+          "EP_REQUIREMENTS": "domain knowledge and business rules",
+          "EP_DOMAIN": "subject matter expertise",
+          "EP_TECHNICAL": "implementation patterns and best practices"
+        }
+      },
+      "web_search_evidence": {
+        "enabled": true,
+        "source_filtering": {
+          "authority_levels": ["gold", "silver", "bronze"],
+          "gold_sources": ["official docs", "core maintainer blogs", "org repositories"],
+          "recency_window_months": 12
+        }
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/layers/0/verification",
+    "value": {
+      "enabled": true,
+      "verification_gates": {
+        "structural_checks": {
+          "tool": "script",
+          "checklist_file": "checks/requirements_checklist.yaml",
+          "required_sections": ["Goals", "Non-Goals", "Constraints", "Success Criteria"]
+        },
+        "content_quality": {
+          "tool": "ai",
+          "model": "claude-sonnet-4",
+          "temperature": 0.2,
+          "rubric": "completeness, accuracy, clarity, traceability"
+        }
+      },
+      "fix_loops": {
+        "max_attempts": 3,
+        "fix_step_id": "S1A-Fix",
+        "evidence_guard": true,
+        "citation_required": true
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/layers/0/tool_architecture",
+    "value": {
+      "tool_selection_strategy": "hybrid",
+      "tools": {
+        "structure_validation": {
+          "type": "script",
+          "reason": "deterministic, zero cost, zero variability"
+        },
+        "content_generation": {
+          "type": "ai",
+          "model": "claude-sonnet-4",
+          "temperature": 0.7,
+          "reason": "requires creativity and interpretation"
+        },
+        "quality_assessment": {
+          "type": "ai",
+          "model": "gpt-4o",
+          "temperature": 0.2,
+          "reason": "requires judgment but should be consistent"
+        }
+      },
+      "red_team_judge_pattern": {
+        "enabled": true,
+        "red_team_model": "claude-sonnet-4",
+        "judge_model": "gpt-4o",
+        "evidence_guard_script": true
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/layers/0/infrastructure",
+    "value": {
+      "caching": {
+        "enabled": true,
+        "cache_key_components": ["inputs_hash", "prompt_hash", "model_version", "step_version"],
+        "cache_directory": "cache/S1A/"
+      },
+      "idempotence": {
+        "enabled": true,
+        "fresh_state_per_step": true,
+        "output_canonicalization": {
+          "sort_lists": true,
+          "normalize_whitespace": true,
+          "round_numbers": 2
+        }
+      },
+      "loop_control": {
+        "max_global_loops": 3,
+        "timeout_minutes": 30,
+        "cost_budget_tokens": 50000
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/layers/0/structured_output",
+    "value": {
+      "enforcement": {
+        "machine_parseable": true,
+        "required_format": "markdown_with_json_metadata",
+        "schema_validation": "schemas/requirements_activities.json",
+        "citation_tracking": {
+          "required": true,
+          "format": "[source: {source}, {date}]",
+          "verification_script": "scripts/verify_citations.py"
+        }
+      },
+      "query_generation": {
+        "enabled": true,
+        "search_query_step": true,
+        "structured_prompts": "prompts/requirements/query_templates.md"
+      }
+    }
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/1/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_REQUIREMENTS", "EP_DOMAIN"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/1/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/requirements_deliverables_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/verification/fix_loops/fix_step_id",
+    "value": "S1D-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/1/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/1/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/infrastructure/caching/cache_directory",
+    "value": "cache/S1D/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/1/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/structured_output/enforcement/schema_validation",
+    "value": "schemas/requirements_deliverables.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/2/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_REQUIREMENTS", "EP_TECHNICAL"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/2/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/design_activities_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/verification/fix_loops/fix_step_id",
+    "value": "S2A-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/2/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/2/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/infrastructure/caching/cache_directory",
+    "value": "cache/S2A/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/2/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/structured_output/enforcement/schema_validation",
+    "value": "schemas/design_activities.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/3/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_REQUIREMENTS", "EP_TECHNICAL"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/3/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/design_deliverables_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/verification/fix_loops/fix_step_id",
+    "value": "S2D-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/3/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/3/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/infrastructure/caching/cache_directory",
+    "value": "cache/S2D/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/3/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/structured_output/enforcement/schema_validation",
+    "value": "schemas/design_deliverables.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/4/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/4/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/implementation_activities_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/verification/fix_loops/fix_step_id",
+    "value": "S3A-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/4/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/4/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/infrastructure/caching/cache_directory",
+    "value": "cache/S3A/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/4/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/structured_output/enforcement/schema_validation",
+    "value": "schemas/implementation_activities.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/5/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/5/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/implementation_deliverables_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/verification/fix_loops/fix_step_id",
+    "value": "S3D-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/5/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/5/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/infrastructure/caching/cache_directory",
+    "value": "cache/S3D/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/5/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/structured_output/enforcement/schema_validation",
+    "value": "schemas/implementation_deliverables.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/6/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/6/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/6/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/6/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/testing_activities_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/6/verification/fix_loops/fix_step_id",
+    "value": "S4A-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/6/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/6/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/6/infrastructure/caching/cache_directory",
+    "value": "cache/S4A/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/6/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/6/structured_output/enforcement/schema_validation",
+    "value": "schemas/testing_activities.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/7/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/7/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/7/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/7/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/testing_deliverables_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/7/verification/fix_loops/fix_step_id",
+    "value": "S4D-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/7/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/7/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/7/infrastructure/caching/cache_directory",
+    "value": "cache/S4D/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/7/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/7/structured_output/enforcement/schema_validation",
+    "value": "schemas/testing_deliverables.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/8/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/8/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL", "EP_DOMAIN"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/8/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/8/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/deployment_activities_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/8/verification/fix_loops/fix_step_id",
+    "value": "S5A-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/8/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/8/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/8/infrastructure/caching/cache_directory",
+    "value": "cache/S5A/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/8/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/8/structured_output/enforcement/schema_validation",
+    "value": "schemas/deployment_activities.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/9/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/9/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL", "EP_DOMAIN"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/9/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/9/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/deployment_deliverables_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/9/verification/fix_loops/fix_step_id",
+    "value": "S5D-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/9/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/9/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/9/infrastructure/caching/cache_directory",
+    "value": "cache/S5D/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/9/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/9/structured_output/enforcement/schema_validation",
+    "value": "schemas/deployment_deliverables.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/10/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/10/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL", "EP_DOMAIN"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/10/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/10/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/maintenance_activities_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/10/verification/fix_loops/fix_step_id",
+    "value": "S6A-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/10/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/10/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/10/infrastructure/caching/cache_directory",
+    "value": "cache/S6A/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/10/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/10/structured_output/enforcement/schema_validation",
+    "value": "schemas/maintenance_activities.json"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/evidence_management",
+    "path": "/layers/11/evidence_management"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/11/evidence_management/evidence_packs/active_packs",
+    "value": ["EP_TECHNICAL", "EP_DOMAIN"]
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/verification",
+    "path": "/layers/11/verification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/11/verification/verification_gates/structural_checks/checklist_file",
+    "value": "checks/maintenance_deliverables_checklist.yaml"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/11/verification/fix_loops/fix_step_id",
+    "value": "S6D-Fix"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/tool_architecture",
+    "path": "/layers/11/tool_architecture"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/infrastructure",
+    "path": "/layers/11/infrastructure"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/11/infrastructure/caching/cache_directory",
+    "value": "cache/S6D/"
+  },
+  {
+    "op": "copy",
+    "from": "/layers/0/structured_output",
+    "path": "/layers/11/structured_output"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/11/structured_output/enforcement/schema_validation",
+    "value": "schemas/maintenance_deliverables.json"
+  }
+]

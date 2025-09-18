@@ -1,0 +1,212 @@
+[
+  {
+    "op": "replace",
+    "path": "/layers/0/section",
+    "value": "Stage 1: Requirements Engineering"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/0/subsection",
+    "value": "Activities"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/0/sub_subsection",
+    "value": "Inception & Project Initiation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/0/bullet_label",
+    "value": "Problem Definition"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/0/bullet_text",
+    "value": "Clearly articulate the business problem or opportunity."
+  },
+  {
+    "op": "add",
+    "path": "/layers/0/activity_meta",
+    "value": {
+      "activity_id": "ACT-ST1-INCIP-INIT",
+      "activity_title": "Inception & Project Initiation",
+      "bullet_index": 1,
+      "bullet_count_in_activity": 6
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/section",
+    "value": "Stage 1: Requirements Engineering"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/subsection",
+    "value": "Activities"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/sub_subsection",
+    "value": "Inception & Project Initiation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/bullet_label",
+    "value": "Stakeholder Identification & Mapping"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/1/bullet_text",
+    "value": "Identify all stakeholders (users, sponsors, regulators, etc.) and their influence/interest levels."
+  },
+  {
+    "op": "add",
+    "path": "/layers/1/activity_meta",
+    "value": {
+      "activity_id": "ACT-ST1-INCIP-INIT",
+      "activity_title": "Inception & Project Initiation",
+      "bullet_index": 2,
+      "bullet_count_in_activity": 6
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/section",
+    "value": "Stage 1: Requirements Engineering"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/subsection",
+    "value": "Activities"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/sub_subsection",
+    "value": "Inception & Project Initiation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/bullet_label",
+    "value": "Project Charter Creation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/2/bullet_text",
+    "value": "Define project objectives, scope, constraints, and success criteria."
+  },
+  {
+    "op": "add",
+    "path": "/layers/2/activity_meta",
+    "value": {
+      "activity_id": "ACT-ST1-INCIP-INIT",
+      "activity_title": "Inception & Project Initiation",
+      "bullet_index": 3,
+      "bullet_count_in_activity": 6
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/section",
+    "value": "Stage 1: Requirements Engineering"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/subsection",
+    "value": "Activities"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/sub_subsection",
+    "value": "Inception & Project Initiation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/bullet_label",
+    "value": "Feasibility Assessment"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/3/bullet_text",
+    "value": "Evaluate technical, economic, operational, and schedule feasibility."
+  },
+  {
+    "op": "add",
+    "path": "/layers/3/activity_meta",
+    "value": {
+      "activity_id": "ACT-ST1-INCIP-INIT",
+      "activity_title": "Inception & Project Initiation",
+      "bullet_index": 4,
+      "bullet_count_in_activity": 6
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/section",
+    "value": "Stage 1: Requirements Engineering"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/subsection",
+    "value": "Activities"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/sub_subsection",
+    "value": "Inception & Project Initiation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/bullet_label",
+    "value": "Risk Identification"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/4/bullet_text",
+    "value": "Identify potential project risks and mitigation strategies."
+  },
+  {
+    "op": "add",
+    "path": "/layers/4/activity_meta",
+    "value": {
+      "activity_id": "ACT-ST1-INCIP-INIT",
+      "activity_title": "Inception & Project Initiation",
+      "bullet_index": 5,
+      "bullet_count_in_activity": 6
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/section",
+    "value": "Stage 1: Requirements Engineering"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/subsection",
+    "value": "Activities"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/sub_subsection",
+    "value": "Inception & Project Initiation"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/bullet_label",
+    "value": "Business Case Development"
+  },
+  {
+    "op": "replace",
+    "path": "/layers/5/bullet_text",
+    "value": "Justify the project from a business perspective."
+  },
+  {
+    "op": "add",
+    "path": "/layers/5/activity_meta",
+    "value": {
+      "activity_id": "ACT-ST1-INCIP-INIT",
+      "activity_title": "Inception & Project Initiation",
+      "bullet_index": 6,
+      "bullet_count_in_activity": 6
+    }
+  }
+]
