@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tool backups and temp files
+*.bak.*
+.jsontmp-*
+
+# Project-generated artifacts
+Jason updates/work_plan.json
+Jason updates/work_plan.json.bak.*
+Jason updates/final_263_layers_plan.json
+
