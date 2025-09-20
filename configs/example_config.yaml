@@ -1,0 +1,47 @@
+# Example configuration for the 12-Layer SDLC Pipeline Template
+# This shows how to configure the template variables for a specific project
+
+variables:
+  project_name: "E-Commerce Platform"
+  primary_language: "python"
+  ai_tool: "claude_code"
+  test_framework: "pytest"
+  max_loops_per_layer: 2
+  cost_budget_usd: 25.0
+  enable_security_scanning: true
+
+tool_overrides:
+  claude_code:
+    model: "claude-3-sonnet"
+    temperature: 0.05  # Lower temperature for more deterministic code
+    max_tokens: 8000   # Higher token limit for complex code
+
+  gemini_cli:
+    model: "gemini-pro-1.5"
+    temperature: 0.1
+
+execution_config:
+  dry_run: false
+  parallel_execution: true
+  max_retries: 2
+  timeout_minutes: 45
+
+cost_controls:
+  max_total_cost: 25.0
+  cost_per_layer_limit: 3.0
+  preferred_models:
+    - "gemini-pro"      # Cheapest
+    - "claude-3-haiku"  # Medium cost
+    - "claude-3-sonnet" # Higher cost, use sparingly
+    - "gpt-4"           # Most expensive, emergency only
+
+output_config:
+  artifact_directory: "artifacts"
+  log_level: "INFO"
+  include_debug_info: false
+  format: "json"
+
+git_config:
+  auto_commit: true
+  branch_prefix: "ecommerce/"
+  commit_message_template: "{{ layer.section }}: {{ layer.purpose }}"

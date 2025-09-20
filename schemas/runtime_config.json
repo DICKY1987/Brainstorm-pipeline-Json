@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://brainstorm-pipeline.com/schemas/runtime_config.json",
+  "title": "Runtime Configuration Schema",
+  "description": "Schema for runtime configuration when rendering workflow templates",
+  "type": "object",
+  "properties": {
+    "variables": {
+      "type": "object",
+      "description": "Variable values to substitute in templates",
+      "patternProperties": {
+        "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+          "description": "Variable value (type depends on template definition)"
+        }
+      }
+    },
+    "tool_overrides": {
+      "type": "object",
+      "description": "Override tool configurations",
+      "patternProperties": {
+        "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+          "type": "object",
+          "properties": {
+            "endpoint": {"type": "string"},
+            "model": {"type": "string"},
+            "max_tokens": {"type": "integer"},
+            "temperature": {"type": "number"},
+            "custom_params": {"type": "object"}
+          }
+        }
+      }
+    },
+    "execution_config": {
+      "type": "object",
+      "description": "Execution-specific configuration",
+      "properties": {
+        "dry_run": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to perform a dry run"
+        },
+        "parallel_execution": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow parallel layer execution"
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 3,
+          "description": "Maximum retries for failed layers"
+        },
+        "timeout_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 60,
+          "description": "Timeout for layer execution"
+        }
+      }
+    },
+    "cost_controls": {
+      "type": "object",
+      "description": "Cost control settings",
+      "properties": {
+        "max_total_cost": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Maximum total cost in USD"
+        },
+        "cost_per_layer_limit": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Maximum cost per layer in USD"
+        },
+        "preferred_models": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Ordered list of preferred models (cheapest first)"
+        }
+      }
+    },
+    "output_config": {
+      "type": "object",
+      "description": "Output configuration",
+      "properties": {
+        "artifact_directory": {
+          "type": "string",
+          "default": "artifacts",
+          "description": "Directory to store artifacts"
+        },
+        "log_level": {
+          "type": "string",
+          "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
+          "default": "INFO"
+        },
+        "include_debug_info": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include debug information in outputs"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["json", "yaml"],
+          "default": "json",
+          "description": "Output format for generated pipeline"
+        }
+      }
+    },
+    "git_config": {
+      "type": "object",
+      "description": "Git integration configuration",
+      "properties": {
+        "auto_commit": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically commit changes"
+        },
+        "branch_prefix": {
+          "type": "string",
+          "default": "workflow/",
+          "description": "Prefix for created branches"
+        },
+        "commit_message_template": {
+          "type": "string",
+          "default": "{{ layer.name }}: {{ layer.purpose }}",
+          "description": "Template for commit messages"
+        }
+      }
+    }
+  }
+}

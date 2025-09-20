@@ -1,0 +1,255 @@
+name: "Configurable 12-Layer SDLC Pipeline"
+version: "1.0"
+description: "Modular 12-layer SDLC workflow with configurable tools, prompts, and roles"
+
+variables:
+  - name: "project_name"
+    type: "string"
+    required: true
+    description: "Name of the project being developed"
+
+  - name: "primary_language"
+    type: "string"
+    default: "python"
+    options: ["python", "javascript", "java", "go", "rust"]
+    description: "Primary programming language"
+
+  - name: "ai_tool"
+    type: "string"
+    default: "claude_code"
+    options: ["claude_code", "aider_local", "gemini_cli", "chatgpt_agent"]
+    description: "Primary AI tool for code generation"
+
+  - name: "test_framework"
+    type: "string"
+    default: "pytest"
+    options: ["pytest", "jest", "junit", "go test", "cargo test"]
+    description: "Testing framework to use"
+
+  - name: "max_loops_per_layer"
+    type: "number"
+    default: 3
+    description: "Maximum retry loops per layer"
+
+  - name: "cost_budget_usd"
+    type: "number"
+    default: 50.0
+    description: "Maximum cost budget in USD"
+
+  - name: "enable_security_scanning"
+    type: "boolean"
+    default: true
+    description: "Enable security scanning in layers"
+
+tools:
+  - name: "claude_code"
+    type: "ai_agent"
+    model: "claude-3-sonnet"
+    max_tokens: 4000
+    temperature: 0.1
+    api_key_env: "ANTHROPIC_API_KEY"
+
+  - name: "aider_local"
+    type: "ai_agent"
+    model: "gpt-4"
+    max_tokens: 4000
+    temperature: 0.2
+    api_key_env: "OPENAI_API_KEY"
+
+  - name: "gemini_cli"
+    type: "ai_agent"
+    model: "gemini-pro"
+    max_tokens: 2048
+    temperature: 0.1
+    api_key_env: "GOOGLE_API_KEY"
+
+  - name: "static_analyzer"
+    type: "static_analyzer"
+    custom_params:
+      language: "{{ primary_language }}"
+
+  - name: "security_scanner"
+    type: "validator"
+    custom_params:
+      enabled: "{{ enable_security_scanning }}"
+
+roles:
+  - name: "Generator"
+    description: "Generates initial code, documentation, and artifacts"
+    system_prompt: |
+      You are a {{ primary_language }} expert focused on generating high-quality code for {{ project_name }}.
+      Your role is to create initial implementations following best practices.
+      Always consider maintainability, performance, and security in your solutions.
+    tools: ["{{ ai_tool }}", "static_analyzer"]
+    capabilities: ["code_generation", "documentation", "architecture_planning"]
+
+  - name: "Critic"
+    description: "Reviews and provides constructive feedback on generated content"
+    system_prompt: |
+      You are a senior code reviewer specializing in {{ primary_language }}.
+      Your role is to critically analyze code for {{ project_name }} and provide actionable feedback.
+      Focus on code quality, security vulnerabilities, performance issues, and adherence to best practices.
+    tools: ["{{ ai_tool }}", "static_analyzer", "security_scanner"]
+    capabilities: ["code_review", "security_analysis", "performance_analysis"]
+
+  - name: "Researcher"
+    description: "Researches requirements, patterns, and solutions"
+    system_prompt: |
+      You are a technical researcher for {{ project_name }} using {{ primary_language }}.
+      Your role is to gather information, analyze requirements, and suggest optimal approaches.
+      Consider industry standards, emerging patterns, and proven solutions.
+    tools: ["{{ ai_tool }}"]
+    capabilities: ["requirements_analysis", "pattern_research", "solution_design"]
+
+  - name: "Judge"
+    description: "Makes final decisions on quality gates and progression"
+    system_prompt: |
+      You are the quality gatekeeper for {{ project_name }}.
+      Your role is to evaluate if work meets standards and decide on layer progression.
+      Be objective, thorough, and focused on project success.
+    tools: ["static_analyzer", "security_scanner"]
+    capabilities: ["quality_assessment", "gate_evaluation", "decision_making"]
+
+orchestrator:
+  max_global_loops: "{{ max_loops_per_layer }}"
+  budget:
+    max_tokens: 2000000
+    max_runtime_min: 120
+    max_cost_usd: "{{ cost_budget_usd }}"
+  routing_rules:
+    pass_condition: "grade>=0.85 && critical_issues.length==0"
+    coverage_condition: "coverage>=0.8"
+    cost_limit_per_layer: "{{ cost_budget_usd / 12 }}"
+
+layers:
+  - name: "Stage 1: Requirements Engineering — Activities"
+    purpose: "{{ project_name }} requirements gathering and analysis"
+    section: "Stage 1: Requirements Engineering"
+    subsection: "Activities"
+    agents: ["Researcher", "Generator", "Critic", "Judge"]
+    inputs: ["project_specifications", "stakeholder_input"]
+    artifacts:
+      requirements_draft: "requirements_draft.md"
+      stakeholder_notes: "stakeholder_notes.md"
+      final_requirements: "requirements_final.md"
+      evaluation: "requirements_eval.json"
+    flow: ["research", "generate", "critique", "evaluate"]
+    gates:
+      grade_min: 0.85
+      no_critical_issues: true
+      max_loops: "{{ max_loops_per_layer }}"
+    on_pass:
+      next: "S1D"
+    on_fail:
+      route: "research"
+      reason: "improve_requirements_clarity"
+    id: "S1A"
+    watch_patterns: ["requirements/**/*.md", "specs/**/*.md"]
+    test_command: "echo 'Requirements validation complete'"
+
+  - name: "Stage 1: Requirements Engineering — Deliverables"
+    purpose: "{{ project_name }} requirements documentation and validation"
+    section: "Stage 1: Requirements Engineering"
+    subsection: "Deliverables"
+    agents: ["Generator", "Critic", "Judge"]
+    inputs: ["prev.artifacts.final_requirements"]
+    artifacts:
+      requirements_doc: "requirements_document.md"
+      acceptance_criteria: "acceptance_criteria.md"
+      traceability_matrix: "traceability_matrix.json"
+      evaluation: "deliverables_eval.json"
+    flow: ["generate", "critique", "validate", "evaluate"]
+    gates:
+      grade_min: 0.85
+      completeness_check: true
+      stakeholder_approval: true
+    on_pass:
+      next: "S2A"
+    on_fail:
+      route: "generate"
+      reason: "improve_deliverable_quality"
+    id: "S1D"
+    watch_patterns: ["docs/**/*.md", "requirements/**/*.json"]
+    test_command: "python validate_requirements.py"
+
+  - name: "Stage 2: System Design — Activities"
+    purpose: "{{ project_name }} system architecture and design planning"
+    section: "Stage 2: System Design"
+    subsection: "Activities"
+    agents: ["Researcher", "Generator", "Critic", "Judge"]
+    inputs: ["prev.artifacts.*"]
+    artifacts:
+      architecture_draft: "architecture_draft.md"
+      design_notes: "design_notes.md"
+      technical_decisions: "technical_decisions.json"
+      evaluation: "design_eval.json"
+    flow: ["research", "design", "critique", "evaluate"]
+    gates:
+      grade_min: 0.85
+      architecture_completeness: 0.9
+      scalability_assessment: true
+    on_pass:
+      next: "S2D"
+    on_fail:
+      route: "research"
+      reason: "improve_architectural_decisions"
+    id: "S2A"
+    watch_patterns: ["architecture/**/*", "design/**/*"]
+    test_command: "python validate_architecture.py"
+
+  - name: "Stage 2: System Design — Deliverables"
+    purpose: "{{ project_name }} system design documentation"
+    section: "Stage 2: System Design"
+    subsection: "Deliverables"
+    agents: ["Generator", "Critic", "Judge"]
+    inputs: ["prev.artifacts.*"]
+    artifacts:
+      system_design: "system_design.md"
+      api_specification: "api_spec.{{ primary_language == 'python' and 'openapi.yaml' or 'swagger.json' }}"
+      database_schema: "database_schema.sql"
+      evaluation: "design_deliverables_eval.json"
+    flow: ["generate", "critique", "validate", "evaluate"]
+    gates:
+      grade_min: 0.85
+      design_consistency: true
+      technical_feasibility: true
+    on_pass:
+      next: "S3A"
+    on_fail:
+      route: "generate"
+      reason: "improve_design_artifacts"
+    id: "S2D"
+    watch_patterns: ["specs/**/*", "schemas/**/*"]
+    test_command: "{{ primary_language == 'python' and 'python validate_openapi.py' or 'npm run validate-swagger' }}"
+
+  # Continue with remaining 8 layers following the same pattern...
+  - name: "Stage 3: Implementation — Activities"
+    purpose: "{{ project_name }} core implementation using {{ primary_language }}"
+    section: "Stage 3: Implementation"
+    subsection: "Activities"
+    agents: ["Generator", "Critic", "Judge"]
+    inputs: ["prev.artifacts.*"]
+    artifacts:
+      code_modules: "src/"
+      unit_tests: "tests/"
+      implementation_notes: "implementation_notes.md"
+      evaluation: "implementation_eval.json"
+    flow: ["generate", "test", "critique", "evaluate"]
+    gates:
+      grade_min: 0.85
+      code_coverage: 0.8
+      no_critical_vulnerabilities: true
+    on_pass:
+      next: "S3D"
+    on_fail:
+      route: "generate"
+      reason: "fix_implementation_issues"
+    id: "S3A"
+    watch_patterns: ["src/**/*.{{ primary_language == 'python' and 'py' or primary_language == 'javascript' and 'js' or primary_language == 'java' and 'java' or primary_language == 'go' and 'go' or 'rs' }}", "tests/**/*"]
+    test_command: "{{ test_framework }} {{ primary_language == 'python' and 'tests/' or primary_language == 'javascript' and '--testPathPattern=tests' or 'test' }}"
+
+metadata:
+  author: "Workflow Bridge System"
+  created: "2024-01-01T00:00:00Z"
+  tags: ["sdlc", "modular", "configurable", "multi-language"]
+  category: "development-pipeline"

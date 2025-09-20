@@ -1,0 +1,249 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://brainstorm-pipeline.com/schemas/workflow_template.json",
+  "title": "Workflow Template Schema",
+  "description": "Schema for modular workflow templates that bridge CLI Multi-Rapid and Brainstorm Pipeline",
+  "type": "object",
+  "required": ["name", "version", "layers"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the workflow template"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "description": "Semantic version of the template"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what this workflow template does"
+    },
+    "variables": {
+      "type": "array",
+      "description": "Configurable variables for the template",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "Variable name (must be valid identifier)"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "list", "dict", "boolean", "number"],
+            "description": "Variable type"
+          },
+          "default": {
+            "description": "Default value for the variable"
+          },
+          "required": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether this variable is required"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the variable"
+          },
+          "options": {
+            "type": "array",
+            "description": "Valid options for enum-like variables"
+          }
+        }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "description": "Tool configurations available in this template",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique name for the tool"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["ai_agent", "static_analyzer", "validator", "generator", "critic"],
+            "description": "Type of tool"
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "description": "API endpoint for the tool"
+          },
+          "api_key_env": {
+            "type": "string",
+            "description": "Environment variable containing API key"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name to use"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum tokens for AI tools"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "Temperature for AI tools"
+          },
+          "custom_params": {
+            "type": "object",
+            "description": "Additional custom parameters"
+          }
+        }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "description": "Agent role configurations",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "system_prompt"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Role name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the role"
+          },
+          "system_prompt": {
+            "type": "string",
+            "description": "System prompt for the role"
+          },
+          "tools": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Tools available to this role"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Capabilities of this role"
+          }
+        }
+      }
+    },
+    "layers": {
+      "type": "array",
+      "description": "Workflow layer templates",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Layer name (supports Jinja2 templating)"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose of this layer"
+          },
+          "section": {
+            "type": "string",
+            "description": "SDLC section name"
+          },
+          "subsection": {
+            "type": "string",
+            "description": "SDLC subsection name"
+          },
+          "agents": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Agents assigned to this layer"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Input patterns for this layer"
+          },
+          "artifacts": {
+            "type": "object",
+            "description": "Artifacts produced by this layer"
+          },
+          "flow": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Execution flow steps"
+          },
+          "gates": {
+            "type": "object",
+            "description": "Quality gates for this layer"
+          },
+          "on_pass": {
+            "type": "object",
+            "description": "Actions when gates pass"
+          },
+          "on_fail": {
+            "type": "object",
+            "description": "Actions when gates fail"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the layer"
+          },
+          "watch_patterns": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "File patterns to watch for changes"
+          },
+          "test_command": {
+            "type": "string",
+            "description": "Command to run tests for this layer"
+          },
+          "commit_trigger": {
+            "type": "string",
+            "enum": ["tests_green", "time_10min", "manual"],
+            "default": "tests_green",
+            "description": "When to commit changes"
+          }
+        }
+      }
+    },
+    "orchestrator": {
+      "type": "object",
+      "description": "Orchestrator configuration",
+      "properties": {
+        "max_global_loops": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "max_tokens": {"type": "integer"},
+            "max_runtime_min": {"type": "integer"}
+          }
+        },
+        "routing_rules": {
+          "type": "object",
+          "description": "Rules for routing between layers"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Template metadata",
+      "properties": {
+        "author": {"type": "string"},
+        "created": {"type": "string", "format": "date-time"},
+        "tags": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "category": {"type": "string"}
+      }
+    }
+  }
+}

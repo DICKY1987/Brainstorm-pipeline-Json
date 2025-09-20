@@ -1,0 +1,27 @@
+# Requirements for Modular Workflow Integration System
+# Core dependencies for the workflow bridge and integration system
+
+# Template processing and validation
+pydantic>=2.0.0           # Data validation and settings management
+jinja2>=3.1.0             # Template rendering engine
+jsonschema>=4.17.0        # JSON Schema validation
+pyyaml>=6.0               # YAML parsing and generation
+
+# Optional dependencies for enhanced functionality
+rich>=13.0.0              # Rich text and beautiful formatting (optional)
+typer>=0.9.0              # Modern CLI framework (optional)
+httpx>=0.24.0             # Async HTTP client (for API integrations)
+
+# Development and testing dependencies (optional)
+pytest>=7.0.0             # Testing framework
+pytest-cov>=4.0.0         # Coverage reporting
+black>=23.0.0             # Code formatting
+isort>=5.12.0             # Import sorting
+mypy>=1.0.0               # Type checking
+
+# Integration dependencies (install if using CLI Multi-Rapid)
+# crewai>=0.1.0           # Multi-agent framework
+# langgraph>=0.1.0        # Graph-based workflows
+# fastapi>=0.100.0        # Web framework for APIs
+# redis>=4.5.0            # Redis client for state management
+# sqlmodel>=0.0.8         # SQL databases with Python type hints
