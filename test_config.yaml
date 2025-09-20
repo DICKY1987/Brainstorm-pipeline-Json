@@ -1,0 +1,22 @@
+'# Configuration for': Configurable 12-Layer SDLC Pipeline
+'# Generated': '2025-09-20T07:55:01.495741'
+variables:
+  project_name: example_value
+  primary_language: python
+  ai_tool: claude_code
+  test_framework: pytest
+  max_loops_per_layer: 3
+  cost_budget_usd: 50.0
+  enable_security_scanning: true
+execution_config:
+  dry_run: false
+  parallel_execution: true
+  max_retries: 3
+  timeout_minutes: 60
+cost_controls:
+  max_total_cost: 50.0
+  cost_per_layer_limit: 5.0
+  preferred_models:
+  - gemini-pro
+  - claude-3-haiku
+  - claude-3-sonnet

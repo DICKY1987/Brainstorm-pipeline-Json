@@ -402,17 +402,17 @@ def main():
         # Test mode - validate template and config without execution
         try:
             integration.bridge.load_workflow_template(args.template)
-            print(f"✅ Template valid: {args.template}")
+            print(f"[OK] Template valid: {args.template}")
 
             with open(args.config, 'r') as f:
                 config = yaml.safe_load(f) if args.config.endswith(('.yaml', '.yml')) else json.load(f)
-            print(f"✅ Configuration valid: {args.config}")
+            print(f"[OK] Configuration valid: {args.config}")
 
-            print("✅ Integration test passed")
+            print("[OK] Integration test passed")
             return 0
 
         except Exception as e:
-            print(f"❌ Integration test failed: {e}")
+            print(f"[ERROR] Integration test failed: {e}")
             return 1
 
 if __name__ == "__main__":

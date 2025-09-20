@@ -111,15 +111,15 @@ roles:
     capabilities: ["quality_assessment", "gate_evaluation", "decision_making"]
 
 orchestrator:
-  max_global_loops: "{{ max_loops_per_layer }}"
+  max_global_loops: 3  # Will be overridden by template variable max_loops_per_layer
   budget:
     max_tokens: 2000000
     max_runtime_min: 120
-    max_cost_usd: "{{ cost_budget_usd }}"
+    max_cost_usd: 50.0  # Will be overridden by template variable cost_budget_usd
   routing_rules:
     pass_condition: "grade>=0.85 && critical_issues.length==0"
     coverage_condition: "coverage>=0.8"
-    cost_limit_per_layer: "{{ cost_budget_usd / 12 }}"
+    cost_limit_per_layer: 4.0  # Will be calculated from cost_budget_usd
 
 layers:
   - name: "Stage 1: Requirements Engineering — Activities"
@@ -137,7 +137,7 @@ layers:
     gates:
       grade_min: 0.85
       no_critical_issues: true
-      max_loops: "{{ max_loops_per_layer }}"
+      max_loops: 3  # Will be overridden by template variable
     on_pass:
       next: "S1D"
     on_fail:
